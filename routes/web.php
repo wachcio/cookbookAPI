@@ -23,3 +23,9 @@ Route::get('/recipes', function () {
 
     return view('recipes', ['recipes'=> $recipes]);
 });
+
+Route::get('/categories', function () {
+    $categories = DB::table('categories')->get();
+
+    return view('categories', ['categories'=> $categories]);
+});
