@@ -1,1 +1,2 @@
 {{ $categories }}
+{{-- @json($categories); --}}
