@@ -35,16 +35,7 @@ Route::get('/recipes', function () {
     return view('recipes', ['recipes'=> $recipes]);
 });
 
-Route::get('/categories', function () {
-    $categories = DB::table('categories')
-    ->orderBy('category_name')
-    ->get();
-
-    return view('categories', ['categories'=> $categories]);
-});
-
-
-Route::get('/categories/group', function () {
+Route::get('/recipes/by_category', function () {
     $categories = DB::table('categories')
     ->orderBy('category_name')
     ->get();
@@ -72,5 +63,16 @@ Route::get('/categories/group', function () {
 
     return view('categories', ['categories'=>$categoriesDetails]);
 });
+
+Route::get('/categories', function () {
+    $categories = DB::table('categories')
+    ->orderBy('category_name')
+    ->get();
+
+    return view('categories', ['categories'=> $categories]);
+});
+
+
+
 
 
