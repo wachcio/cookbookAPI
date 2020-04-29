@@ -35,12 +35,17 @@ Route::get('/categories_of_recipes', function () {
 
 
     $categories_of_recipes = DB::table('recipes_id_category_id')
-    ->select('recipes_id_category_id.ID', 'recipes.ID AS recipes_ID', 'recipes.name', DB::raw('GROUP_CONCAT(categories.category_name ORDER BY categories.category_name SEPARATOR \', \') AS categories'))
+    ->select('recipes_id_category_id.ID', 'recipes.ID AS recipes_ID', 'recipes.name', DB::raw('GROUP_CONCAT(categories.category_name ORDER BY categories.category_name) AS categories'))
     ->join('recipes','recipes.ID', '=', 'recipes_id_category_id.recipes_id')
     ->join('categories','categories.ID', '=', 'recipes_id_category_id.category_id')
     ->groupBy('recipes.name')
     ->orderBy('recipes.name')
     ->get();
+
+
+    foreach ($categories_of_recipes as $key => $value) {
+        $value->categories = explode(',', $value->categories);
+    }
 
     return view('categories_of_recipes', ['categories_of_recipes'=> $categories_of_recipes]);
 });
