@@ -44,3 +44,28 @@ Route::get('/categories', function () {
 });
 
 
+Route::get('/categories/details', function () {
+    $categories = DB::table('categories')
+    ->orderBy('category_name')
+    ->get();
+
+    $categoriesDetails = [];
+
+    foreach ($categories as $key => $value) {
+        $temp = DB::table('recipes_id_category_id')
+        ->select( 'recipes_id_category_id.category_id', 'categories.category_name', 'recipes_id_category_id.recipes_id', 'recipes.name', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating')
+        ->join('recipes', 'recipes.ID', '=', 'recipes_id')
+        ->join('categories', 'categories.ID', '=', 'category_id')
+        ->where('recipes_id_category_id.category_id', '=', $value->ID)
+        ->get();
+
+        if (count($temp)>0) {
+            array_push($categoriesDetails, $temp);
+        }
+    }
+    var_dump($categoriesDetails);
+
+    return view('categories', ['categories'=> $categoriesDetails]);
+});
+
+
