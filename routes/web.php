@@ -36,7 +36,9 @@ Route::get('/recipes', function () {
 });
 
 Route::get('/categories', function () {
-    $categories = DB::table('categories')->get();
+    $categories = DB::table('categories')
+    ->orderBy('category_name')
+    ->get();
 
     return view('categories', ['categories'=> $categories]);
 });
