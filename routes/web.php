@@ -24,7 +24,7 @@ Route::get('/recipes', function () {
     ->join('recipes','recipes.ID', '=', 'recipes_id_category_id.recipes_id')
     ->join('categories','categories.ID', '=', 'recipes_id_category_id.category_id')
     ->groupBy('recipes.name')
-    ->orderBy('recipes.name')
+    ->orderBy('recipes.ID')
     ->get();
 
 
@@ -32,7 +32,7 @@ Route::get('/recipes', function () {
         $value->categories = explode(',', $value->categories);
     }
 
-    return view('recipes', ['recipes'=> $recipes]);
+    return view('getJSON', ['JSONdata'=> $recipes]);
 });
 
 Route::get('/recipes/by_category', function () {
@@ -61,7 +61,7 @@ Route::get('/recipes/by_category', function () {
 
     $categoriesDetails = json_encode($categoriesDetails);
 
-    return view('categories', ['categories'=>$categoriesDetails]);
+    return view('getJSON', ['JSONdata'=>$categoriesDetails]);
 });
 
 Route::get('/categories', function () {
@@ -69,10 +69,14 @@ Route::get('/categories', function () {
     ->orderBy('category_name')
     ->get();
 
-    return view('categories', ['categories'=> $categories]);
+    return view('getJSON', ['JSONdata'=> $categories]);
 });
 
 
 
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
