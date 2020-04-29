@@ -35,6 +35,23 @@ Route::get('/recipes', function () {
     return view('getJSON', ['JSONdata'=> $recipes]);
 });
 
+Route::get('/recipe/{id}', function ($id) {
+    $recipe = DB::table('recipes')
+    ->select('*')
+    ->where('ID', '=', $id)
+    ->get();
+
+
+
+    if (count($recipe) == 0) {
+        $recipe = (object)null;
+        $recipe->error = "Recipe nr ".$id." does not exist.";
+        $recipe = json_encode($recipe);
+    }
+
+    return view('getJSON', ['JSONdata'=> $recipe]);
+});
+
 Route::get('/recipes/by_category', function () {
     $categories = DB::table('categories')
     ->orderBy('category_name')
