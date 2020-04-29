@@ -35,7 +35,7 @@ Route::get('/recipes', function () {
     return view('getJSON', ['JSONdata'=> $recipes]);
 });
 
-Route::get('/recipe/{id}', function ($id) {
+Route::get('/recipes/{id}', function ($id) {
     $recipe = DB::table('recipes')
     ->select('*')
     ->where('ID', '=', $id)
@@ -87,7 +87,7 @@ Route::get('/categories', function () {
     return view('getJSON', ['JSONdata'=> $categories]);
 });
 
-Route::get('/category/{id}', function ($id) {
+Route::get('/categories/{id}', function ($id) {
     $category = DB::table('categories')
     ->select('*')
     ->where('ID', '=', $id)
