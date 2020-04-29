@@ -28,12 +28,6 @@ Route::get('/categories', 'CategoriesController@getCategories');
 
 Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
 
-// Route::post('/categories/{category_name}', function ($category_name) {
-//     $categories = DB::insert('INSERT INTO categories (ID, category_name) VALUES (NULL, $category_name);');
-//     return $category_name;
-//     // return view('getJSON', ['JSONdata'=> $categories]);
-// });
-
 Route::post('/categories', 'CategoriesController@create');
 
 
