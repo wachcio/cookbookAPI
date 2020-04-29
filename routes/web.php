@@ -41,8 +41,6 @@ Route::get('/recipe/{id}', function ($id) {
     ->where('ID', '=', $id)
     ->get();
 
-
-
     if (count($recipe) == 0) {
         $recipe = (object)null;
         $recipe->error = "Recipe nr ".$id." does not exist.";
@@ -89,7 +87,20 @@ Route::get('/categories', function () {
     return view('getJSON', ['JSONdata'=> $categories]);
 });
 
+Route::get('/category/{id}', function ($id) {
+    $category = DB::table('categories')
+    ->select('*')
+    ->where('ID', '=', $id)
+    ->get();
 
+    if (count($category) == 0) {
+        $category = (object)null;
+        $category->error = "Recipe nr ".$id." does not exist.";
+        $category = json_encode($category);
+    }
+
+    return view('getJSON', ['JSONdata'=> $category]);
+});
 
 
 
