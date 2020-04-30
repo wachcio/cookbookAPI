@@ -28,7 +28,10 @@ Route::get('/categories', 'CategoriesController@getCategories');
 
 Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
 
-Route::post('/categories', 'CategoriesController@create');
+
+Route::post('/categories', 'CategoriesController@createCategory');
+Route::put('/categories/{id}', 'CategoriesController@updateCategory');
+Route::delete('/categories/{id}', 'CategoriesController@deleteCategory');
 
 
 
