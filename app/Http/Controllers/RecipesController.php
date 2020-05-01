@@ -39,6 +39,107 @@ class RecipesController extends Controller
         return view('getJSON', ['JSONdata'=> $recipe]);
     }
 
+    public function createRecipesID(Request $request)
+    {
+
+        // $inputs = request()->all();
+        $inputs = request()->all();
+
+        if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
+            return ["error" => "Nothing added to the base"];
+        }
+
+        $picture = (isset($inputs['picture'])) ? $inputs['picture'] : "";
+        $rating = (isset($inputs['rating'])) ? $inputs['rating'] : "";
+
+        $categories = DB::table('categories')
+        ->where('ID', '=', $inputs['category_id'])
+        ->get();
+
+        // var_dump($categories);
+
+        $sql = DB::table('recipes')->insert(
+            ['name' => $inputs['name'],'ingredients' => $inputs['ingredients'],'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating]
+        );
+
+        $recipesID = DB::getPdo()->lastInsertId();
+
+       if (count($categories) > 0 ) {
+            DB::table('recipes_id_category_id')->insert(
+                ['category_id' => $inputs['category_id'],'recipes_id' => $recipesID]
+            );
+        } else {
+            DB::table('recipes')->delete()->where("ID", "=", $recipesID);
+        }
+
+
+
+        // var_dump($sql);
+        if ($sql == 1 && count($categories) > 0) {
+            $response = ["success"=>"Add one recipes to database on ID ", "last_insert_id" => $recipesID];
+        } else {
+            $response = ["error" => "Nothing added to the base"];
+        }
+
+        return $response;
+    }
+
+    public function updateRecipesID(Request $request, $ID)
+    {
+        // $inputs = request()->all();
+
+        // if (count($inputs) == 0 || !isset($inputs['category_name'])) {
+        //     return ["error" => "Nothing update in database"];
+        // }
+
+        // $category = DB::table('categories')
+        // ->select('*')
+        // ->where('ID', '=', $ID)
+        // ->get();
+
+        // if (count($category) == 0) {
+        //     return ["error" => "Nothing update in database"];
+        // }
+
+        // $sql = DB::table('categories')
+        //       ->where('ID', $ID)
+        //       ->update(['category_name' => $inputs['category_name']]);
+
+        // if ($sql == 1) {
+        //     $response = ["success"=>"Update one category to database: ".$inputs['category_name']];
+        // } else {
+        //     $response = ["error" => "Nothing update in database!"];
+        // }
+
+        // return $response;
+    }
+
+    public function deleteRecipesID(Request $request, $ID)
+    {
+    //     $inputs = request()->all();
+
+    //     $category = DB::table('categories')
+    //     ->select('*')
+    //     ->where('ID', '=', $ID)
+    //     ->get();
+
+    //     if (count($category) == 0) {
+    //         return ["error" => "Nothing delete in database"];
+    //     }
+
+    //     $sql = DB::table('categories')
+    //           ->where('ID', $ID)
+    //           ->delete();
+
+    //     if ($sql == 1) {
+    //         $response = ["success"=>"Delete one category in database ID: ".$ID];
+    //     } else {
+    //         $response = ["error" => "Nothing delete in database!"];
+    //     }
+
+    //     return $response;
+    }
+
     public function getRecipesByCategory(){
         $categories = DB::table('categories')
     ->orderBy('category_name')

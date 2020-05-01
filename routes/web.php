@@ -19,16 +19,15 @@ Route::get('/', function () {
 });
 
 Route::get('/recipes', 'RecipesController@getRecipes');
-
 Route::get('/recipes/{id}', 'RecipesController@getRecipesID');
+Route::post('/recipes', 'RecipesController@createRecipesID');
+Route::put('/recipes/{id}', 'RecipesController@updateRecipesID');
+Route::delete('/recipes/{id}', 'RecipesController@deleteRecipesID');
 
 Route::get('/recipes_by_category', 'RecipesController@getRecipesByCategory');
 
 Route::get('/categories', 'CategoriesController@getCategories');
-
 Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
-
-
 Route::post('/categories', 'CategoriesController@createCategory');
 Route::put('/categories/{id}', 'CategoriesController@updateCategory');
 Route::delete('/categories/{id}', 'CategoriesController@deleteCategory');
