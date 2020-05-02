@@ -39,19 +39,35 @@ class RecipesController extends Controller
 
     public function getRecipesID($id)
     {
-        $recipe = DB::table('recipes')
-        ->select('*')
-        ->where('ID', '=', $id)
+        $recipes = DB::table('recipes_id_category_id')
+        ->select('recipes.ID', 'recipes.name', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating', DB::raw('GROUP_CONCAT(categories.category_name, ";;", categories.ID ORDER BY categories.category_name) AS categories'))
+        ->join('recipes', 'recipes.ID', '=', 'recipes_id_category_id.recipes_id')
+        ->join('categories', 'categories.ID', '=', 'recipes_id_category_id.category_id')
+        ->groupBy('recipes.name')
+        ->orderBy('recipes.ID')
+        ->where('recipes.ID', '=', $id)
         ->get();
 
-        if (count($recipe) == 0) {
-            $recipe = (object)null;
-            $recipe->error = "Recipe nr ".$id." does not exist.";
-            $recipe = json_encode($recipe);
+
+        foreach ($recipes as $key => $value) {
+            $temp = explode(',', $value->categories);
+            $arr = [];
+            foreach ($temp as $key2 => $value2) {
+                $obj = (object)[];
+
+                $temp2 = explode(';;', $value2);
+
+                $obj->ID = $temp2[1];
+                $obj->category_name = $temp2[0];
+                array_push($arr, $obj);
+            }
+
+            $value->categories = $arr;
         }
 
-        return view('getJSON', ['JSONdata'=> $recipe]);
+        return view('getJSON', ['JSONdata'=> $recipes]);
     }
+
 
     public function createRecipesID(Request $request)
     {
