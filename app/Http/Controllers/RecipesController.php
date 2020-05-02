@@ -67,8 +67,6 @@ class RecipesController extends Controller
             }
         }
 
-        // var_dump($categories);
-
         $sql = DB::table('recipes')->insert(
             ['name' => $inputs['name'],'ingredients' => $inputs['ingredients'],'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating]
         );
@@ -85,9 +83,6 @@ class RecipesController extends Controller
             DB::table('recipes')->delete()->where("ID", "=", $recipesID);
         }
 
-
-
-        // var_dump($sql);
         if ($sql == 1 && count($categories) > 0) {
             $response = ["success"=>"Add one recipes to database on ID ", "last_insert_id" => $recipesID];
         } else {
@@ -165,28 +160,6 @@ class RecipesController extends Controller
         }
 
         return $response;
-        //     $inputs = request()->all();
-
-    //     $category = DB::table('categories')
-    //     ->select('*')
-    //     ->where('ID', '=', $ID)
-    //     ->get();
-
-    //     if (count($category) == 0) {
-    //         return ["error" => "Nothing delete in database"];
-    //     }
-
-    //     $sql = DB::table('categories')
-    //           ->where('ID', $ID)
-    //           ->delete();
-
-    //     if ($sql == 1) {
-    //         $response = ["success"=>"Delete one category in database ID: ".$ID];
-    //     } else {
-    //         $response = ["error" => "Nothing delete in database!"];
-    //     }
-
-    //     return $response;
     }
 
     public function getRecipesByCategory()
