@@ -139,9 +139,6 @@ class RecipesController extends Controller
             DB::table('recipes')->where("ID", "=", $ID)->delete();
         }
 
-
-
-        // var_dump($sql);
         if (count($categories) > 0) {
             $response = ["success"=>"Update one recipes in database"];
         } else {
@@ -149,32 +146,6 @@ class RecipesController extends Controller
         }
 
         return $response;
-        // $inputs = request()->all();
-
-        // if (count($inputs) == 0 || !isset($inputs['category_name'])) {
-        //     return ["error" => "Nothing update in database"];
-        // }
-
-        // $category = DB::table('categories')
-        // ->select('*')
-        // ->where('ID', '=', $ID)
-        // ->get();
-
-        // if (count($category) == 0) {
-        //     return ["error" => "Nothing update in database"];
-        // }
-
-        // $sql = DB::table('categories')
-        //       ->where('ID', $ID)
-        //       ->update(['category_name' => $inputs['category_name']]);
-
-        // if ($sql == 1) {
-        //     $response = ["success"=>"Update one category to database: ".$inputs['category_name']];
-        // } else {
-        //     $response = ["error" => "Nothing update in database!"];
-        // }
-
-        // return $response;
     }
 
     public function deleteRecipesID(Request $request, $ID)
