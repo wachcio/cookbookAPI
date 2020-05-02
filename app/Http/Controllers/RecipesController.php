@@ -150,6 +150,21 @@ class RecipesController extends Controller
 
     public function deleteRecipesID(Request $request, $ID)
     {
+        $inputs = request()->all();
+
+        DB::table('recipes_id_category_id')->where("recipes_id", "=", $ID)->delete();
+
+        $sql = DB::table('recipes')
+        ->where('ID', $ID)
+        ->delete();
+
+        if ($sql> 0) {
+            $response = ["success"=>"Update one recipes in database"];
+        } else {
+            $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+        }
+
+        return $response;
         //     $inputs = request()->all();
 
     //     $category = DB::table('categories')
