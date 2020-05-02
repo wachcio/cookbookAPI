@@ -43,13 +43,10 @@ class RecipesController extends Controller
 
     public function createRecipesID(Request $request)
     {
-
-        // $inputs = request()->all();
         $inputs = request()->all();
         $inputsCategories = [];
         if (isset($inputs['category_id'])) {
             $inputsCategories = explode(', ', $inputs['category_id']);
-            // var_dump($inputsCategories);
         }
 
         if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
@@ -65,9 +62,9 @@ class RecipesController extends Controller
             $categories = DB::table('categories')
              ->where('ID', '=', $value)
                 ->get();
-                if (count($categories) <1) {
-                    return ["error" => "Nothing added to the base"];
-                }
+            if (count($categories) <1) {
+                return ["error" => "Nothing added to the base"];
+            }
         }
 
         // var_dump($categories);
@@ -79,12 +76,10 @@ class RecipesController extends Controller
         $recipesID = DB::getPdo()->lastInsertId();
 
         if (count($categories) > 0) {
-
             foreach ($inputsCategories as $key => $value) {
                 DB::table('recipes_id_category_id')->insert(
                     ['category_id' => $value,'recipes_id' => $recipesID]
                 );
-
             }
         } else {
             DB::table('recipes')->delete()->where("ID", "=", $recipesID);
@@ -104,6 +99,56 @@ class RecipesController extends Controller
 
     public function updateRecipesID(Request $request, $ID)
     {
+        $inputs = request()->all();
+        $inputsCategories = [];
+        if (isset($inputs['category_id'])) {
+            $inputsCategories = explode(', ', $inputs['category_id']);
+        }
+
+        if ($inputs == []  || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
+            return ["error" => "Nothing update. Please fill correct everyting filds."];
+        }
+
+        $picture = (isset($inputs['picture'])) ? $inputs['picture'] : "";
+        $rating = (isset($inputs['rating'])) ? $inputs['rating'] : "";
+
+        $categories = null;
+
+        foreach ($inputsCategories as $key => $value) {
+            $categories = DB::table('categories')
+             ->where('ID', '=', $value)
+                ->get();
+            if (count($categories) <1) {
+                return ["error" => "Nothing update. Please fill correct everyting filds."];
+            }
+        }
+
+        $sql = DB::table('recipes')
+        ->where('ID', $ID)
+        ->update(['name' => $inputs['name'], 'ingredients' => $inputs['ingredients'], 'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating, ]);
+
+        if (count($categories) > 0) {
+            DB::table('recipes_id_category_id')->where("recipes_id", "=", $ID)->delete();
+
+            foreach ($inputsCategories as $key => $value) {
+                DB::table('recipes_id_category_id')->insert(
+                    ['category_id' => $value,'recipes_id' => $ID]
+                );
+            }
+        } else {
+            DB::table('recipes')->where("ID", "=", $ID)->delete();
+        }
+
+
+
+        // var_dump($sql);
+        if (count($categories) > 0) {
+            $response = ["success"=>"Update one recipes in database"];
+        } else {
+            $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+        }
+
+        return $response;
         // $inputs = request()->all();
 
         // if (count($inputs) == 0 || !isset($inputs['category_name'])) {

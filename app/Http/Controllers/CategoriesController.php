@@ -9,8 +9,6 @@ class CategoriesController extends Controller
 {
     public function createCategory(Request $request)
     {
-
-        // $inputs = request()->all();
         $inputs = request()->all();
 
         if ($inputs == [] || !isset($inputs['category_name'])) {
