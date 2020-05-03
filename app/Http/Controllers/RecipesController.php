@@ -214,7 +214,6 @@ class RecipesController extends Controller
             }
         }
 
-        $categoriesDetails = json_encode($categoriesDetails);
 
         return response()->json($categoriesDetails);
     }
