@@ -89,8 +89,7 @@ class CategoriesController extends Controller
         $categories = DB::table('categories')
     ->orderBy('category_name')
     ->get();
-
-        return view('getJSON', ['JSONdata'=> $categories]);
+        return response()->json($categories);
     }
 
     public function getCategoriesID($id)
@@ -106,6 +105,6 @@ class CategoriesController extends Controller
             $category = json_encode($category);
         }
 
-        return view('getJSON', ['JSONdata'=> $category]);
+        return response()->json($category);
     }
 }

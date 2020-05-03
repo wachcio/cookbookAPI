@@ -34,7 +34,7 @@ class RecipesController extends Controller
             $value->categories = $arr;
         }
 
-        return view('getJSON', ['JSONdata'=> $recipes]);
+        return response()->json($recipes);
     }
 
     public function getRecipesID($id)
@@ -65,7 +65,7 @@ class RecipesController extends Controller
             $value->categories = $arr;
         }
 
-        return view('getJSON', ['JSONdata'=> $recipes]);
+        return response()->json($recipes);
     }
 
 
@@ -216,6 +216,6 @@ class RecipesController extends Controller
 
         $categoriesDetails = json_encode($categoriesDetails);
 
-        return view('getJSON', ['JSONdata'=>$categoriesDetails]);
+        return response()->json($categoriesDetails);
     }
 }
