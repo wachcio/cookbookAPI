@@ -4,28 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Response;
 
 class CategoriesController extends Controller
 {
     public function createCategory(Request $request)
     {
+        $statusCode = 200;
         $inputs = request()->all();
 
         if ($inputs == [] || !isset($inputs['category_name'])) {
-            return ["error" => "Nothing added to the base"];
-        }
-
-        $sql = DB::table('categories')->insert(
-            ['category_name' => $inputs['category_name']]
-        );
-
-        if ($sql == 1) {
-            $response = ["success"=>"Add one category to database: ".$inputs['category_name']];
-        } else {
             $response = ["error" => "Nothing added to the base"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
+        }
+        try {
+            $sql = DB::table('categories')->insert(
+                ['category_name' => $inputs['category_name']]
+            );
+
+            if ($sql == 1) {
+                $response = ["success"=>"Add one category to database: ".$inputs['category_name']];
+                $statusCode = 200;
+                return Response::json($response, $statusCode);
+            } else {
+                $response = ["error" => "Nothing added to the base"];
+                $statusCode = 400;
+                return Response::json($response, $statusCode);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $response = ["error" => "Nothing added to the base", "msg"=>$ex];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
-        return $response;
+        return Response::json($response, $statusCode);
     }
 
     public function updateCategory(Request $request, $ID)
@@ -88,10 +101,18 @@ class CategoriesController extends Controller
 
     public function getCategories()
     {
-        $categories = DB::table('categories')
+        $statusCode = 200;
+        try {
+            $response = DB::table('categories')
     ->orderBy('category_name')
     ->get();
-        return response()->json($categories);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $response = ["error" => "Nothing get from base", "msg"=>$ex];
+            $statusCode = 400;
+        }
+        // return response()->json($response);
+        // return response(json($categories), $statusCode);
+        return Response::json($response, $statusCode);
     }
 
     public function getCategoriesID($id)
