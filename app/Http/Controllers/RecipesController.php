@@ -72,14 +72,18 @@ class RecipesController extends Controller
 
     public function createRecipesID(Request $request)
     {
+        $statusCode = 200;
         $inputs = request()->all();
         $inputsCategories = [];
+
         if (isset($inputs['category_id'])) {
             $inputsCategories = explode(', ', $inputs['category_id']);
         }
 
         if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
-            return ["error" => "Nothing added to the base"];
+            $response = ["error" => "Nothing added to the base"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         $picture = (isset($inputs['picture'])) ? $inputs['picture'] : "";
@@ -92,35 +96,43 @@ class RecipesController extends Controller
              ->where('ID', '=', $value)
                 ->get();
             if (count($categories) <1) {
-                return ["error" => "Nothing added to the base"];
+                $response = ["error" => "Nothing added to the base"];
+                $statusCode = 400;
+                return Response::json($response, $statusCode);
             }
         }
+        try {
+            $sql = DB::table('recipes')->insert(
+                ['name' => $inputs['name'],'ingredients' => $inputs['ingredients'],'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating]
+            );
 
-        $sql = DB::table('recipes')->insert(
-            ['name' => $inputs['name'],'ingredients' => $inputs['ingredients'],'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating]
-        );
+            $recipesID = DB::getPdo()->lastInsertId();
 
-        $recipesID = DB::getPdo()->lastInsertId();
-
-        if (count($categories) > 0) {
-            foreach ($inputsCategories as $key => $value) {
-                DB::table('recipes_id_category_id')->insert(
-                    ['category_id' => $value,'recipes_id' => $recipesID]
-                );
+            if (count($categories) > 0) {
+                foreach ($inputsCategories as $key => $value) {
+                    DB::table('recipes_id_category_id')->insert(
+                        ['category_id' => $value,'recipes_id' => $recipesID]
+                    );
+                }
+            } else {
+                DB::table('recipes')->delete()->where("ID", "=", $recipesID);
             }
-        } else {
-            DB::table('recipes')->delete()->where("ID", "=", $recipesID);
+
+            if ($sql == 1 && count($categories) > 0) {
+                $response = ["success"=>"Add one recipes to database on ID ", "last_insert_id" => $recipesID];
+            } else {
+                $response = ["error" => "Nothing added to the base"];
+                $statusCode = 400;
+                return Response::json($response, $statusCode);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $response = ["error" => "Nothing added to the base", "msg"=>$ex];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
-        if ($sql == 1 && count($categories) > 0) {
-            $response = ["success"=>"Add one recipes to database on ID ", "last_insert_id" => $recipesID];
-        } else {
-            $response = ["error" => "Nothing added to the base"];
-        }
-
-        return $response;
+        return Response::json($response, $statusCode);
     }
-
     public function updateRecipesID(Request $request, $ID)
     {
         $inputs = request()->all();
