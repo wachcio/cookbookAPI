@@ -18,15 +18,15 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => 'cors'], function () {
-    Route::get('/recipes', 'RecipesController@getRecipes');
+    Route::get('/recipes', 'RecipesController@getAllRecipes');
     Route::get('/recipes/{id}', 'RecipesController@getRecipesID');
-    Route::post('/recipes', 'RecipesController@createRecipesID');
-    Route::put('/recipes/{id}', 'RecipesController@updateRecipesID');
-    Route::delete('/recipes/{id}', 'RecipesController@deleteRecipesID');
+    Route::post('/recipes', 'RecipesController@createRecipes');
+    Route::put('/recipes/{id}', 'RecipesController@updateRecipes');
+    Route::delete('/recipes/{id}', 'RecipesController@deleteRecipes');
 
     Route::get('/recipes_by_category', 'RecipesController@getRecipesByCategory');
 
-    Route::get('/categories', 'CategoriesController@getCategories');
+    Route::get('/categories', 'CategoriesController@getAllCategories');
     Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
     Route::post('/categories', 'CategoriesController@createCategory');
     Route::put('/categories/{id}', 'CategoriesController@updateCategory');

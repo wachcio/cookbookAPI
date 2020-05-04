@@ -8,7 +8,7 @@ use Response;
 
 class RecipesController extends Controller
 {
-    public function getRecipes()
+    public function getAllRecipes()
     {
         $recipes = DB::table('recipes_id_category_id')
         ->select('recipes.ID', 'recipes.name', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating', DB::raw('GROUP_CONCAT(categories.category_name, ";;", categories.ID ORDER BY categories.category_name) AS categories'))
@@ -70,7 +70,7 @@ class RecipesController extends Controller
     }
 
 
-    public function createRecipesID(Request $request)
+    public function createRecipes(Request $request)
     {
         $statusCode = 200;
         $inputs = request()->all();
@@ -133,7 +133,7 @@ class RecipesController extends Controller
 
         return Response::json($response, $statusCode);
     }
-    public function updateRecipesID(Request $request, $ID)
+    public function updateRecipes(Request $request, $ID)
     {
         $inputs = request()->all();
         $inputsCategories = [];
@@ -184,7 +184,7 @@ class RecipesController extends Controller
         return $response;
     }
 
-    public function deleteRecipesID(Request $request, $ID)
+    public function deleteRecipes(Request $request, $ID)
     {
         $inputs = request()->all();
 
