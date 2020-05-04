@@ -33,7 +33,7 @@ class CategoriesController extends Controller
         $inputs = request()->all();
 
         if (count($inputs) == 0 || !isset($inputs['category_name'])) {
-            return ["error" => "Nothing update in database"];
+            return ["error" => "Nothing update in database1"];
         }
 
         $category = DB::table('categories')
@@ -42,7 +42,7 @@ class CategoriesController extends Controller
         ->get();
 
         if (count($category) == 0) {
-            return ["error" => "Nothing update in database"];
+            return ["error" => "Nothing update in database2"];
         }
 
         $sql = DB::table('categories')
@@ -70,6 +70,8 @@ class CategoriesController extends Controller
         if (count($category) == 0) {
             return ["error" => "Nothing delete in database"];
         }
+
+        DB::table('recipes_id_category_id')->where("category_id", "=", $ID)->delete();
 
         $sql = DB::table('categories')
               ->where('ID', $ID)

@@ -175,6 +175,15 @@ class RecipesController extends Controller
     {
         $inputs = request()->all();
 
+        $recipes = DB::table('recipes')
+        ->select('*')
+        ->where('ID', '=', $ID)
+        ->get();
+
+        if (count($recipes) == 0) {
+            return ["error" => "Nothing delete in database"];
+        }
+
         DB::table('recipes_id_category_id')->where("recipes_id", "=", $ID)->delete();
 
         $sql = DB::table('recipes')
