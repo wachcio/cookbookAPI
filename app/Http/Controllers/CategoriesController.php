@@ -77,7 +77,9 @@ class CategoriesController extends Controller
         $inputs = request()->all();
 
         if (count($inputs) == 0 || !isset($inputs['category_name'])) {
-            return ["error" => "Nothing update in database1"];
+            $response = ["error" => "Nothing update in database"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         $category = DB::table('categories')
@@ -86,7 +88,9 @@ class CategoriesController extends Controller
         ->get();
 
         if (count($category) == 0) {
-            return ["error" => "Nothing update in database2"];
+            $response = ["error" => "Nothing update in database"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         $sql = DB::table('categories')
@@ -95,8 +99,12 @@ class CategoriesController extends Controller
 
         if ($sql == 1) {
             $response = ["success"=>"Update one category to database: ".$inputs['category_name']];
+            $statusCode = 200;
+            return Response::json($response, $statusCode);
         } else {
-            $response = ["error" => "Nothing update in database!"];
+            $response = ["error" => "Nothing update in database"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         return $response;
@@ -112,7 +120,9 @@ class CategoriesController extends Controller
         ->get();
 
         if (count($category) == 0) {
-            return ["error" => "Nothing delete in database"];
+            $response = ["error" => "Nothing delete in database"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         DB::table('recipes_id_category_id')->where("category_id", "=", $ID)->delete();
@@ -123,8 +133,12 @@ class CategoriesController extends Controller
 
         if ($sql == 1) {
             $response = ["success"=>"Delete one category in database ID: ".$ID];
+            $statusCode = 200;
+            return Response::json($response, $statusCode);
         } else {
-            $response = ["error" => "Nothing delete in database!"];
+            $response = ["error" => "Nothing delete in database"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         return $response;

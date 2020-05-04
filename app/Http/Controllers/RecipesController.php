@@ -142,7 +142,9 @@ class RecipesController extends Controller
         }
 
         if ($inputs == []  || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
-            return ["error" => "Nothing update. Please fill correct everyting filds."];
+            $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         $picture = (isset($inputs['picture'])) ? $inputs['picture'] : "";
@@ -155,7 +157,9 @@ class RecipesController extends Controller
              ->where('ID', '=', $value)
                 ->get();
             if (count($categories) <1) {
-                return ["error" => "Nothing update. Please fill correct everyting filds."];
+                $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+                $statusCode = 400;
+                return Response::json($response, $statusCode);
             }
         }
 
@@ -177,8 +181,12 @@ class RecipesController extends Controller
 
         if (count($categories) > 0) {
             $response = ["success"=>"Update one recipes in database"];
+            $statusCode = 200;
+            return Response::json($response, $statusCode);
         } else {
             $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         return $response;
@@ -194,7 +202,9 @@ class RecipesController extends Controller
         ->get();
 
         if (count($recipes) == 0) {
-            return ["error" => "Nothing delete in database"];
+            $response = ["error" => "Nothing delete in database"];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         DB::table('recipes_id_category_id')->where("recipes_id", "=", $ID)->delete();
@@ -205,8 +215,12 @@ class RecipesController extends Controller
 
         if ($sql> 0) {
             $response = ["success"=>"Update one recipes in database"];
+            $statusCode = 200;
+            return Response::json($response, $statusCode);
         } else {
             $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+            $statusCode = 400;
+            return Response::json($response, $statusCode);
         }
 
         return $response;
