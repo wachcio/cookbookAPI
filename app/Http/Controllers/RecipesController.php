@@ -11,7 +11,7 @@ class RecipesController extends Controller
     public function getAllRecipes()
     {
         $recipes = DB::table('recipes_id_category_id')
-        ->select('recipes.ID', 'recipes.name', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating', DB::raw('GROUP_CONCAT(categories.category_name, ";;", categories.ID ORDER BY categories.category_name) AS categories'))
+        ->select('recipes.ID', 'recipes.name', 'recipes.description', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating', DB::raw('GROUP_CONCAT(categories.category_name, ";;", categories.ID ORDER BY categories.category_name) AS categories'))
         ->join('recipes', 'recipes.ID', '=', 'recipes_id_category_id.recipes_id')
         ->join('categories', 'categories.ID', '=', 'recipes_id_category_id.category_id')
         ->groupBy('recipes.name')
@@ -41,7 +41,7 @@ class RecipesController extends Controller
     public function getRecipesID($id)
     {
         $recipes = DB::table('recipes_id_category_id')
-        ->select('recipes.ID', 'recipes.name', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating', DB::raw('GROUP_CONCAT(categories.category_name, ";;", categories.ID ORDER BY categories.category_name) AS categories'))
+        ->select('recipes.ID', 'recipes.name', 'recipes.description', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating', DB::raw('GROUP_CONCAT(categories.category_name, ";;", categories.ID ORDER BY categories.category_name) AS categories'))
         ->join('recipes', 'recipes.ID', '=', 'recipes_id_category_id.recipes_id')
         ->join('categories', 'categories.ID', '=', 'recipes_id_category_id.category_id')
         ->groupBy('recipes.name')
@@ -80,7 +80,7 @@ class RecipesController extends Controller
             $inputsCategories = explode(', ', $inputs['category_id']);
         }
 
-        if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
+        if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['description'])|| !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
             $response = ["error" => "Nothing added to the base"];
             $statusCode = 400;
             return Response::json($response, $statusCode);
@@ -103,7 +103,7 @@ class RecipesController extends Controller
         }
         try {
             $sql = DB::table('recipes')->insert(
-                ['name' => $inputs['name'],'ingredients' => $inputs['ingredients'],'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating]
+                ['name' => $inputs['name'],'description' => $inputs['description'],'ingredients' => $inputs['ingredients'],'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating]
             );
 
             $recipesID = DB::getPdo()->lastInsertId();
@@ -141,7 +141,7 @@ class RecipesController extends Controller
             $inputsCategories = explode(', ', $inputs['category_id']);
         }
 
-        if ($inputs == []  || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
+        if ($inputs == []  || !isset($inputs['name']) || !isset($inputs['description']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
             $response = ["error" => "Nothing update. Please fill correct everyting filds."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
@@ -165,7 +165,7 @@ class RecipesController extends Controller
 
         $sql = DB::table('recipes')
         ->where('ID', $ID)
-        ->update(['name' => $inputs['name'], 'ingredients' => $inputs['ingredients'], 'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating, ]);
+        ->update(['name' => $inputs['name'], 'description' => $inputs['description'],'ingredients' => $inputs['ingredients'], 'execution' => $inputs['execution'], 'picture' => $picture, 'rating' => $rating, ]);
 
         if (count($categories) > 0) {
             DB::table('recipes_id_category_id')->where("recipes_id", "=", $ID)->delete();
@@ -236,7 +236,7 @@ class RecipesController extends Controller
 
         foreach ($categories as $key => $value) {
             $temp = DB::table('recipes_id_category_id')
-        ->select('recipes_id_category_id.recipes_id', 'recipes.name', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating')
+        ->select('recipes_id_category_id.recipes_id', 'recipes.name', 'recipes.description', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating')
         ->join('recipes', 'recipes.ID', '=', 'recipes_id')
         ->join('categories', 'categories.ID', '=', 'category_id')
         ->where('recipes_id_category_id.category_id', '=', $value->ID)
