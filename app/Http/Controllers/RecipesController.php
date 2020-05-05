@@ -15,7 +15,7 @@ class RecipesController extends Controller
         ->join('recipes', 'recipes.ID', '=', 'recipes_id_category_id.recipes_id')
         ->join('categories', 'categories.ID', '=', 'recipes_id_category_id.category_id')
         ->groupBy('recipes.name')
-        ->orderBy('recipes.ID')
+        ->orderBy('recipes.name')
         ->get();
 
 
