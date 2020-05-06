@@ -226,6 +226,34 @@ class RecipesController extends Controller
         return $response;
     }
 
+    public function getRecipesByCategoryID(Request $request, $ID)
+    {
+        $category = DB::table('categories')
+    ->where('id', '=', $ID)
+    ->get();
+
+        $categoriesDetails = (object)null;
+
+
+        $temp = DB::table('recipes_id_category_id')
+        ->select('recipes_id_category_id.recipes_id', 'recipes.name', 'recipes.description', 'recipes.ingredients', 'recipes.execution', 'recipes.picture', 'recipes.rating')
+        ->join('recipes', 'recipes.ID', '=', 'recipes_id')
+        ->join('categories', 'categories.ID', '=', 'category_id')
+        ->where('recipes_id_category_id.category_id', '=', $ID)
+        ->get();
+
+        if (count($temp)>0) {
+            $tempObj = (object)null;
+            $tempObj->ID = $ID;
+            $tempObj->category_name = $category[0]->category_name;
+            $categoriesDetails = array($tempObj, $temp);
+        }
+
+
+
+        return response()->json($categoriesDetails);
+    }
+
     public function getRecipesByCategory()
     {
         $categories = DB::table('categories')

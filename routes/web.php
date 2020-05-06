@@ -25,6 +25,7 @@ Route::group(['middleware' => 'cors'], function () {
     Route::delete('/recipes/{id}', 'RecipesController@deleteRecipes');
 
     Route::get('/recipes_by_category', 'RecipesController@getRecipesByCategory');
+    Route::get('/recipes_by_category/{id}', 'RecipesController@getRecipesByCategoryID');
 
     Route::get('/categories', 'CategoriesController@getAllCategories');
     Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
