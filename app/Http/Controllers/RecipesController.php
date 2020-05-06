@@ -251,7 +251,8 @@ class RecipesController extends Controller
 
 
 
-        return response()->json($categoriesDetails);
+        // return response()->json($categoriesDetails);
+        return response()->json($temp);
     }
 
     public function getRecipesByCategory()
