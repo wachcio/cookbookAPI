@@ -80,14 +80,15 @@ class RecipesController extends Controller
             $inputsCategories = explode(', ', $inputs['category_id']);
         }
 
-        if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['description'])|| !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
-            $response = ["error" => "Nothing added to the base"];
+        if ($inputs == [] || !isset($inputs['name']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
+            $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano przepisu do bazy. Wypełnij poprawnie wszystkie pola."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
 
         $picture = (isset($inputs['picture'])) ? $inputs['picture'] : "";
         $rating = (isset($inputs['rating'])) ? $inputs['rating'] : "";
+        $description = (isset($inputs['description'])) ? $inputs['description'] : "";
 
         $categories = null;
 
@@ -96,7 +97,7 @@ class RecipesController extends Controller
              ->where('ID', '=', $value)
                 ->get();
             if (count($categories) <1) {
-                $response = ["error" => "Nothing added to the base"];
+                $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano przepisu do bazy. Wypełnij poprawnie wszystkie pola."];
                 $statusCode = 400;
                 return Response::json($response, $statusCode);
             }
@@ -119,14 +120,14 @@ class RecipesController extends Controller
             }
 
             if ($sql == 1 && count($categories) > 0) {
-                $response = ["success"=>"Add one recipes to database on ID ", "last_insert_id" => $recipesID];
+                $response = ["msgEN"=>"Add one recipes to database on ID ", "msgPL" => "Dodano jeden przepis do bazy", "last_insert_id" => $recipesID];
             } else {
-                $response = ["error" => "Nothing added to the base"];
+                $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano przepisu do bazy. Wypełnij poprawnie wszystkie pola."];
                 $statusCode = 400;
                 return Response::json($response, $statusCode);
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            $response = ["error" => "Nothing added to the base", "msg"=>$ex];
+            $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano przepisu do bazy. Wypełnij poprawnie wszystkie pola."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -141,14 +142,15 @@ class RecipesController extends Controller
             $inputsCategories = explode(', ', $inputs['category_id']);
         }
 
-        if ($inputs == []  || !isset($inputs['name']) || !isset($inputs['description']) || !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
-            $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+        if ($inputs == []  || !isset($inputs['name']) ||  !isset($inputs['ingredients']) || !isset($inputs['execution']) || !isset($inputs['category_id'])) {
+            $response = ["msgEN" => "Nothing update. Please fill correct everyting filds.", "msgPL" => "Nic nie zostało zaktualizowane. Proszę wypełnić poprawnie wszystkie pola."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
 
         $picture = (isset($inputs['picture'])) ? $inputs['picture'] : "";
         $rating = (isset($inputs['rating'])) ? $inputs['rating'] : "";
+        $description = (isset($inputs['description'])) ? $inputs['description'] : "";
 
         $categories = null;
 
@@ -157,7 +159,7 @@ class RecipesController extends Controller
              ->where('ID', '=', $value)
                 ->get();
             if (count($categories) <1) {
-                $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+                $response = ["msgEN" => "Nothing update. Please fill correct everyting filds.", "msgPL" => "Nic nie zostało zaktualizowane. Proszę wypełnić poprawnie wszystkie pola."];
                 $statusCode = 400;
                 return Response::json($response, $statusCode);
             }
@@ -180,11 +182,11 @@ class RecipesController extends Controller
         }
 
         if (count($categories) > 0) {
-            $response = ["success"=>"Update one recipes in database"];
+            $response = ["msgEN"=>"Update one recipes in database", "msgPL" => "Zaktualizowano jeden przepis w bazie."];
             $statusCode = 200;
             return Response::json($response, $statusCode);
         } else {
-            $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+            $response = ["msgEN" => "Nothing update. Please fill correct everyting filds.", "msgPL" => "Nic nie zostało zaktualizowane. Proszę wypełnić poprawnie wszystkie pola."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -202,7 +204,7 @@ class RecipesController extends Controller
         ->get();
 
         if (count($recipes) == 0) {
-            $response = ["error" => "Nothing delete in database"];
+            $response = ["msgEN" => "Nothing delete in database", "msgPL" => "Nie usunięto nic z bazy."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -214,11 +216,11 @@ class RecipesController extends Controller
         ->delete();
 
         if ($sql> 0) {
-            $response = ["success"=>"Update one recipes in database"];
+            $response = ["msgEN"=>"Remove one recipes in database", "msgPL" => "Usunięto jeden przepis z bazy."];
             $statusCode = 200;
             return Response::json($response, $statusCode);
         } else {
-            $response = ["error" => "Nothing update. Please fill correct everyting filds."];
+            $response = ["msgEN" => "Nothing delete in database.", "msgPL" => "Nie usunięto nic z bazy."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
