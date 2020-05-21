@@ -14,7 +14,7 @@ class Recipes extends Migration
     public function up()
     {
         Schema::create('recipes', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('ID');
             $table->string('name');
             $table->string('description', 255)->nullable($value = false);
             $table->text('ingredients')->nullable($value = false);

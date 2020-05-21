@@ -14,7 +14,7 @@ class RecipesIdCategoryId extends Migration
     public function up()
     {
         Schema::create('recipes_id_category_id', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('ID');
             $table->mediumInteger('recipes_id')->nullable($value = false);
             $table->mediumInteger('category_id')->nullable($value = false);
 
