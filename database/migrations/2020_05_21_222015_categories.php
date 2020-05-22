@@ -14,8 +14,9 @@ class Categories extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('ID');
-            $table->string('category_name', 255)->nullable($value = false);
+            $table->string('category_name', 250)->nullable($value = false)->unique();
         });
     }
 

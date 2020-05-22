@@ -14,12 +14,13 @@ class Recipes extends Migration
     public function up()
     {
         Schema::create('recipes', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('ID');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('description', 255)->nullable($value = false);
             $table->text('ingredients')->nullable($value = false);
             $table->text('execution')->nullable($value = false);
-            $table->string('picture', 255)->nullable($value = false);
+            $table->text('picture')->nullable($value = false);
             $table->tinyInteger('rating')->nullable($value = false)->default(0);
         });
     }

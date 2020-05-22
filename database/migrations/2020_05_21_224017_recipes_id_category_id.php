@@ -14,10 +14,10 @@ class RecipesIdCategoryId extends Migration
     public function up()
     {
         Schema::create('recipes_id_category_id', function (Blueprint $table) {
-            $table->bigIncrements('ID');
-            $table->mediumInteger('recipes_id')->nullable($value = false);
-            $table->mediumInteger('category_id')->nullable($value = false);
-
+            $table->engine = 'InnoDB';
+            $table->increments('ID');
+            $table->unsignedBigInteger('recipes_id');
+            $table->unsignedBigInteger('category_id');
             $table->foreign('recipes_id')->references('ID')->on('recipes');
             $table->foreign('category_id')->references('ID')->on('categories');
         });
