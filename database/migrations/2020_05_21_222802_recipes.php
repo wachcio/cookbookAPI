@@ -17,7 +17,7 @@ class Recipes extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('ID');
             $table->string('name')->unique();
-            $table->string('description', 255)->nullable($value = false);
+            $table->text('description')->nullable($value = true);
             $table->text('ingredients')->nullable($value = false);
             $table->text('execution')->nullable($value = false);
             $table->text('picture')->nullable($value = false);
