@@ -77,7 +77,7 @@ class CategoriesController extends Controller
         $inputs = request()->all();
 
         if (count($inputs) == 0 || !isset($inputs['category_name'])) {
-            $response = ["error" => "Nothing update in database"];
+            $response = ["msgEN" => "Nothing update. Please fill correct fild.", "msgPL" => "Nic nie zostało zaktualizowane. Proszę wypełnić poprawnie pole."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -88,7 +88,7 @@ class CategoriesController extends Controller
         ->get();
 
         if (count($category) == 0) {
-            $response = ["error" => "Nothing update in database"];
+            $response = ["msgEN" => "Nothing update. Please fill correct fild.", "msgPL" => "Nic nie zostało zaktualizowane. Proszę wypełnić poprawnie pole."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -98,11 +98,11 @@ class CategoriesController extends Controller
               ->update(['category_name' => $inputs['category_name']]);
 
         if ($sql == 1) {
-            $response = ["success"=>"Update one category to database: ".$inputs['category_name']];
+            $response = ["msgEN"=>"Update one categories in database", "msgPL" => "Zaktualizowano jedną kategorię w bazie."];
             $statusCode = 200;
             return Response::json($response, $statusCode);
         } else {
-            $response = ["error" => "Nothing update in database"];
+            $response = ["msgEN" => "Nothing update. Please fill correct fild.", "msgPL" => "Nic nie zostało zaktualizowane. Proszę wypełnić poprawnie pole."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -120,7 +120,7 @@ class CategoriesController extends Controller
         ->get();
 
         if (count($category) == 0) {
-            $response = ["error" => "Nothing delete in database"];
+            $response = ["msgEN" => "Nothing delete in database", "msgPL" => "Nie usunięto nic z bazy."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -132,11 +132,11 @@ class CategoriesController extends Controller
               ->delete();
 
         if ($sql == 1) {
-            $response = ["success"=>"Delete one category in database ID: ".$ID];
+            $response = ["msgEN"=>"Remove one category in database", "msgPL" => "Usunięto jedną kategorię z bazy."];
             $statusCode = 200;
             return Response::json($response, $statusCode);
         } else {
-            $response = ["error" => "Nothing delete in database"];
+            $response = ["msgEN" => "Nothing delete in database", "msgPL" => "Nie usunięto nic z bazy."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
