@@ -45,7 +45,7 @@ class CategoriesController extends Controller
         $inputs = request()->all();
 
         if ($inputs == [] || !isset($inputs['category_name'])) {
-            $response = ["error" => "Nothing added to the base"];
+            $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano kategorii do bazy."];
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
@@ -55,7 +55,7 @@ class CategoriesController extends Controller
             );
 
             if ($sql == 1) {
-                $response = ["success"=>"Add one category to database: ".$inputs['category_name']];
+                $response = ["msgEN"=>"Add one category to database: ".$inputs['category_name'], "msgPL" => "Dodano jedeną kategorię do bazy".$inputs['category_name']];
                 $statusCode = 200;
                 return Response::json($response, $statusCode);
             } else {
@@ -64,7 +64,11 @@ class CategoriesController extends Controller
                 return Response::json($response, $statusCode);
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            $response = ["error" => "Nothing added to the base", "msg"=>$ex];
+            if ($ex->errorInfo[1]==1062) {
+                $response = ["msgEN" => "Category ".$inputs['category_name']." already exists", "msgPL" => "Kategoria ".$inputs['category_name']." już istnieje."];
+            } else {
+                $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano kategorii do bazy."];
+            }
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
