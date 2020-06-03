@@ -127,7 +127,11 @@ class RecipesController extends Controller
                 return Response::json($response, $statusCode);
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano przepisu do bazy. Wypełnij poprawnie wszystkie pola."];
+            if ($ex->errorInfo[1]==1062) {
+                $response = ["msgEN" => "Recipe ".$inputs['name']." already exists", "msgPL" => "Przepis ".$inputs['name']." już istnieje."];
+            } else {
+                $response = ["msgEN" => "Nothing added to the base", "msgPL" => "Nie dodano kategorii do bazy."];
+            }
             $statusCode = 400;
             return Response::json($response, $statusCode);
         }
