@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +41,32 @@ Route::group(['middleware' => 'cors'], function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::post('/login', function (Request $request) {
+    $data = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response(
+            ["msgEN" => "Login fail.", "msgPL" => "Błąd logowania."],
+            404
+        );
+    }
+
+    $token = $user->createToken('cookbookAPI')->plainTextToken;
+
+    $response = [
+        'user' => $user,
+        'token' => $token
+    ];
+
+    return response($response, 201);
+});
