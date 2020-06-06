@@ -1,5 +1,6 @@
 <?php
 
+// use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\User;
@@ -23,18 +24,31 @@ Route::get('/', function () {
 Route::group(['middleware' => 'cors'], function () {
     Route::get('/recipes', 'RecipesController@getAllRecipes');
     Route::get('/recipes/{id}', 'RecipesController@getRecipesID');
-    Route::post('/recipes', 'RecipesController@createRecipes');
-    Route::put('/recipes/{id}', 'RecipesController@updateRecipes');
-    Route::delete('/recipes/{id}', 'RecipesController@deleteRecipes');
+
+
+    // Route::middleware(['can:is-admin'])->group(function () {
+    //     Route::post('recipes/', 'RecipesController@createRecipes');
+    //     Route::put('recipes/{id}', 'RecipesController@updateRecipes');
+    //     Route::delete('recipes/{id}', 'RecipesController@deleteRecipes');
+    // });
+
+    Route::group(['prefix'=>'recipes','middleware'=> ['can:is-admin']], function () {
+        Route::post('/', 'RecipesController@createRecipes');
+        Route::put('{id}', 'RecipesController@updateRecipes');
+        Route::delete('{id}', 'RecipesController@deleteRecipes');
+    });
+
 
     Route::get('/recipes_by_category', 'RecipesController@getRecipesByCategory');
     Route::get('/recipes_by_category/{id}', 'RecipesController@getRecipesByCategoryID');
 
     Route::get('/categories', 'CategoriesController@getAllCategories');
     Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
-    Route::post('/categories', 'CategoriesController@createCategory');
-    Route::put('/categories/{id}', 'CategoriesController@updateCategory');
-    Route::delete('/categories/{id}', 'CategoriesController@deleteCategory');
+    Route::group(['middleware'=> ['can:is-admin']], function () {
+        Route::post('/categories', 'CategoriesController@createCategory');
+        Route::put('/categories/{id}', 'CategoriesController@updateCategory');
+        Route::delete('/categories/{id}', 'CategoriesController@deleteCategory');
+    });
 });
 
 
