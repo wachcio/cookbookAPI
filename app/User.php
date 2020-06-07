@@ -40,6 +40,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
+        // dd('isAdmin');
         // return $this->is_admin === 1;
         return true;
     }

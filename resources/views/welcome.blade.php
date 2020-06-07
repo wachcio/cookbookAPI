@@ -66,6 +66,7 @@
     <body>
         <div class="flex-center position-ref full-height">
             <h1>Witam w Cookbook API</h1>
+            <p></p>
         </div>
     </body>
 </html>
