@@ -32,16 +32,8 @@ class LoginController extends Controller
         $response = [
             'user' => $user,
             'token' => $token,
-            // 'X-CSRF-TOKEN' => csrf_token()
         ];
 
         return response($response, 201);
-        // if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
-        //     $authenticated_user = \Auth::user();
-        //     $user = User::find($authenticated_user->id);
-        //     dd($user->createToken('cookbook')->accessToken);
-        // }
-
-        // dd('here');
     }
 }

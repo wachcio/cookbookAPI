@@ -142,13 +142,6 @@ class RecipesController extends Controller
     }
     public function updateRecipes(Request $request, $ID)
     {
-        // if (Auth::check()) {
-        //     return 'User: '. \Auth::user()->id;
-        // }
-        // if (Auth::guest()) {
-        //     return 'Not logged';
-        // }
-
         $inputs = request()->all();
         $inputsCategories = [];
         if (isset($inputs['category_id'])) {
