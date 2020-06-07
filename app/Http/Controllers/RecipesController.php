@@ -144,7 +144,8 @@ class RecipesController extends Controller
     {
         if (Auth::check()) {
             return 'User: '. Auth::user()->getId();
-        } else {
+        }
+        if (Auth::guest()) {
             return 'Niezalogowany';
         }
 
