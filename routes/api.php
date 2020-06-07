@@ -21,34 +21,26 @@ Auth::routes();
 
 
 Route::group(['middleware' => 'cors'], function () {
+    Route::post('/login', 'LoginController@authenticated');
+
     Route::get('/recipes', 'RecipesController@getAllRecipes');
     Route::get('/recipes/{id}', 'RecipesController@getRecipesID');
-
-
-    // Route::middleware(['can:is-admin'])->group(function () {
-    //     Route::post('recipes/', 'RecipesController@createRecipes');
-    //     Route::put('recipes/{id}', 'RecipesController@updateRecipes');
-    //     Route::delete('recipes/{id}', 'RecipesController@deleteRecipes');
-    // });
-
-    Route::group(['prefix'=>'recipes'], function () {
-        // Route::group(['prefix'=>'recipes','middleware'=> ['can:is-admin']], function () {
-        Route::post('/', 'RecipesController@createRecipes');
-        Route::put('{id}', 'RecipesController@updateRecipes');
-        Route::delete('{id}', 'RecipesController@deleteRecipes');
-    });
-
-
     Route::get('/recipes_by_category', 'RecipesController@getRecipesByCategory');
     Route::get('/recipes_by_category/{id}', 'RecipesController@getRecipesByCategoryID');
 
     Route::get('/categories', 'CategoriesController@getAllCategories');
     Route::get('/categories/{id}', 'CategoriesController@getCategoriesID');
-    Route::group(['prefix'=>'recipes'], function () {
-        // Route::group(['prefix'=>'recipes','middleware'=> ['can:is-admin']], function () {
-        Route::post('/categories', 'CategoriesController@createCategory');
-        Route::put('/categories/{id}', 'CategoriesController@updateCategory');
-        Route::delete('/categories/{id}', 'CategoriesController@deleteCategory');
+
+    Route::group(['prefix'=>'recipes','middleware'=> ['auth:sanctum','can:is-admin']], function () {
+        Route::post('/', 'RecipesController@createRecipes');
+        Route::put('{id}', 'RecipesController@updateRecipes');
+        Route::delete('{id}', 'RecipesController@deleteRecipes');
+    });
+
+    Route::group(['prefix'=>'categories','middleware'=> ['auth:sanctum','can:is-admin']], function () {
+        Route::post('/', 'CategoriesController@createCategory');
+        Route::put('{id}', 'CategoriesController@updateCategory');
+        Route::delete('{id}', 'CategoriesController@deleteCategory');
     });
 });
 
@@ -57,33 +49,39 @@ Route::group(['middleware' => 'cors'], function () {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::post('/login', function (Request $request) {
-    $data = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
+// Route::post('/login', function (Request $request) {
+//     $data = $request->validate([
+//         'email' => 'required|email',
+//         'password' => 'required'
+//     ]);
 
-    $user = User::where('email', $request->email)->first();
+//     $user = User::where('email', $request->email)->first();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response(
-            ["msgEN" => "Login fail.", "msgPL" => "Błąd logowania."],
-            404
-        );
-    }
+//     if (!$user || !Hash::check($request->password, $user->password)) {
+//         return response(
+//             ["msgEN" => "Login fail.", "msgPL" => "Błąd logowania."],
+//             404
+//         );
+//     }
 
-    $token = $user->createToken('cookbook')->plainTextToken;
+//     $token = $user->createToken('cookbook')->plainTextToken;
 
 
-    $response = [
-        'user' => $user,
-        'token' => $token,
-        // 'X-CSRF-TOKEN' => csrf_token()
-    ];
+//     $response = [
+//         'user' => $user,
+//         'token' => $token,
+//         // 'X-CSRF-TOKEN' => csrf_token()
+//     ];
 
-    return response($response, 201);
-});
+//     return response($response, 201);
+// });
